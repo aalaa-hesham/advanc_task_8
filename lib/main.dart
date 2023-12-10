@@ -1,3 +1,4 @@
+import 'package:advanc_task_8/blocs/cubit.dart';
 import 'package:advanc_task_8/blocs/todo_bloc.dart';
 import 'package:advanc_task_8/pages/todo_list_page.dart';
 import 'package:flutter/material.dart';
@@ -8,17 +9,17 @@ void main() {
 }
 
 class TodoApp extends StatelessWidget {
-  final TodoBloc _todoBloc = TodoBloc();
+  //final TodoBloc _todoBloc = TodoBloc();
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(providers: [BlocProvider(create:  (context) => _todoBloc)],
+    return MultiBlocProvider(providers: [BlocProvider<TodoCubit>(create:  (context) => TodoCubit())],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: TodoListPage(),
+        home: TodoList(),
       ),
     );
   }

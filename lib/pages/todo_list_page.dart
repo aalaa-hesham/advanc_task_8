@@ -1,58 +1,53 @@
+import 'package:advanc_task_8/blocs/cubit.dart';
 import 'package:advanc_task_8/blocs/todo_bloc.dart';
 import 'package:advanc_task_8/models/todo.dart';
 import 'package:advanc_task_8/pages/add_todo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TodoListPage extends StatelessWidget {
+class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        backgroundColor: Color.fromARGB(255, 26, 12, 105),
+        title: Center(child: Text('Todo List')),
       ),
-      body: BlocBuilder<TodoBloc, TodoState>(
+      body: BlocBuilder<TodoCubit, List<String>>(
         builder: (context, state) {
-          if (state is TodoInitialState) {
-            return Center(
-              child: Text('No todos yet.'),
-            );
-          } else if (state is TodoLoadedState) {
-            return ListView.builder(
-              itemCount: state.todos.length,
-              itemBuilder: (context, index) {
-                final todo = state.todos[index];
-                return ListTile(
-                  title: Text(todo.title),
-                  subtitle: Text(todo.description),
-                  trailing: Checkbox(
-                    value: todo.isCompleted,
-                    onChanged: (value) {
-                      final updatedTodo = todo.copyWith(isDone: value ?? false);
-                      BlocProvider.of<TodoBloc>(context)
-                          .add(UpdateTodoEvent(updatedTodo, index));
-                    },
+          return ListView.builder(
+            itemCount: state.length,
+            itemBuilder: (context, index) {
+              final todoText = state[index];
+              return Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Container(
+                  color: Colors.amber,
+                  child: ListTile(
+                    title: Text(todoText),
+                    onTap: () =>
+                        context.read<TodoCubit>().removeTodoItem(index),
                   ),
-                );
-              },
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+                ),
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddTodoPage()),
+          final task = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return AddTodoScreen();
+              },
+            ),
           );
-          if (result != null && result is Todo) {
-            BlocProvider.of<TodoBloc>(context).add(AddTodoEvent(result));
+          if (task != null) {
+            context.read<TodoCubit>().addTodoItem(task);
           }
         },
+        tooltip: 'Add information',
         child: Icon(Icons.add),
       ),
     );
