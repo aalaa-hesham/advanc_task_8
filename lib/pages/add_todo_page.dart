@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class AddTodoPage extends StatelessWidget {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  late TextEditingController _titleController = TextEditingController();
+  late TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

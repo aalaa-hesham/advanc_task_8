@@ -12,8 +12,7 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TodoBloc>(
-      create: (context) => _todoBloc,
+    return MultiBlocProvider(providers: [BlocProvider(create:  (context) => _todoBloc)],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
