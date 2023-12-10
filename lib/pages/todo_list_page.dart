@@ -4,7 +4,6 @@ import 'package:advanc_task_8/pages/add_todo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class TodoListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -29,12 +28,9 @@ class TodoListPage extends StatelessWidget {
                   trailing: Checkbox(
                     value: todo.isCompleted,
                     onChanged: (value) {
-                      final updatedTodo = Todo(
-                        title: todo.title,
-                        description: todo.description,
-                        isCompleted: value ?? false,
-                      );
-                      BlocProvider.of<TodoBloc>(context).add(UpdateTodoEvent(updatedTodo, index));
+                      final updatedTodo = todo.copyWith(isDone: value ?? false);
+                      BlocProvider.of<TodoBloc>(context)
+                          .add(UpdateTodoEvent(updatedTodo, index));
                     },
                   ),
                 );
@@ -48,11 +44,14 @@ class TodoListPage extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddTodoPage()),
           );
+          if (result != null && result is Todo) {
+            BlocProvider.of<TodoBloc>(context).add(AddTodoEvent(result));
+          }
         },
         child: Icon(Icons.add),
       ),

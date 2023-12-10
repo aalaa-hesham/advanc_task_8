@@ -3,13 +3,16 @@ import 'package:advanc_task_8/models/todo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:flutter/material.dart';
 
 class AddTodoPage extends StatelessWidget {
-  late TextEditingController _titleController = TextEditingController();
-  late TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final TodoBloc _todoBloc = BlocProvider.of<TodoBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Todo'),
@@ -33,18 +36,19 @@ class AddTodoPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.0),
-        ElevatedButton(
-                onPressed: () {
-                  final title = _titleController.text;
-                  final description = _descriptionController.text;
-                  final todo = Todo(
-                    title: title,
-                    description: description,
-                  );
-                  BlocProvider.of<TodoBloc>(context).add(AddTodoEvent(todo));
-                },
-                child: Text('Add'),
-              ),
+            ElevatedButton(
+              onPressed: () {
+                final title = _titleController.text;
+                final description = _descriptionController.text;
+                final todo = Todo(
+                  title: title,
+                  description: description,
+                );
+                _todoBloc.add(AddTodoEvent(todo));
+                Navigator.pop(context);
+              },
+              child: Text('Add'),
+            ),
           ],
         ),
       ),
